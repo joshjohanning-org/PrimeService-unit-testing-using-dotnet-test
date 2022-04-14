@@ -64,3 +64,12 @@ jobs:
         echo '### Deployment results!' >> $GITHUB_STEP_SUMMARY
         echo 'Success!' >> $GITHUB_STEP_SUMMARY
         # assign to multi-line string and echo that variable out
+        
+   
+  mypic:
+
+    runs-on: ubuntu-latest
+    needs: [build]
+    
+    steps:
+    - run: echo '![test](https://avatars.githubusercontent.com/u/19912012?s=400&u=66d9176be0f185dd26507a776a6c7de81f6b4727&v=4)' >> $GITHUB_STEP_SUMMARY
