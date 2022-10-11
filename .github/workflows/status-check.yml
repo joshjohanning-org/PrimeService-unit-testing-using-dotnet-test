@@ -43,7 +43,8 @@ jobs:
     - uses: LouisBrunner/checks-action@v1.3.1
       id: check
       with:
-        token: ${{ github.token }}
+        # token: ${{ github.token }}
+        token: ${{ secrets.PAT }}
         name: Second Job
         status: in_progress
 
@@ -73,7 +74,8 @@ jobs:
       if: failure()
       with:
         # token: ${{ steps.get_installation_token.outputs.token }}
-        token: ${{ github.token }}
+        # token: ${{ github.token }}
+        token: ${{ secrets.PAT }}
         name: Second Job
         conclusion: ${{ job.status }}
         # conclusion: action_required
@@ -82,4 +84,3 @@ jobs:
         output: |
           {"summary":""}
         output_text_description_file: code-coverage-results.md
-
