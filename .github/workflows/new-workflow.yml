@@ -29,6 +29,7 @@ jobs:
       with:
         # token: ${{ steps.get_installation_token.outputs.token }}
         token: ${{ github.token }}
+        sha: ${{ github.sha }}
         name: Second Job
         # check_id: ${{ github.event.inputs.check-id }}
         conclusion: ${{ job.status }}
