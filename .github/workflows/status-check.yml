@@ -1,0 +1,78 @@
+name: Status Check
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    # - name: Dump GitHub context
+    #   env:
+    #     GITHUB_CONTEXT: ${{ toJSON(github) }}
+    #   run: echo "$GITHUB_CONTEXT"
+
+    # - name: Write to Job Summary
+    #   run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+      
+    - uses: tibdex/github-app-token@v1
+      id: get_installation_token
+      with: 
+        app_id: 170284
+        private_key: ${{ secrets.PRIVATE_KEY }}
+
+    # - uses: LouisBrunner/checks-action@v1.3.1
+    #   if: always()
+    #   with:
+    #     token: ${{ steps.get_installation_token.outputs.token }}
+    #     name: Code Coverage
+    #     conclusion: ${{ job.status }}
+    #     # conclusion: action_required
+    #     details_url: https://josh-ops.com/posts/github-code-coverage/
+    #     action_url: https://josh-ops.com/posts/github-code-coverage/
+    #     output: |
+    #       {"summary":""}
+    #     output_text_description_file: code-coverage-results.md
+
+    - uses: LouisBrunner/checks-action@v1.3.1
+      id: check
+      with:
+        # token: ${{ steps.get_installation_token.outputs.token }}
+        token: ${{ github.token }}
+        name: Second Job
+        status: in_progress
+
+    - name: Trigger Workflow
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.actions.createWorkflowDispatch({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            workflow_id: 'new-workflow.yml',
+            ref: '${{ github.head_ref }}',
+            inputs: {
+              "exit-code": "0"
+            }
+          })
+
+    - uses: LouisBrunner/checks-action@v1.3.1
+      if: failure()
+      with:
+        # token: ${{ steps.get_installation_token.outputs.token }}
+        token: ${{ github.token }}
+        name: Second Job
+        conclusion: ${{ job.status }}
+        # conclusion: action_required
+        details_url: https://josh-ops.com/posts/github-code-coverage/
+        action_url: https://josh-ops.com/posts/github-code-coverage/
+        output: |
+          {"summary":""}
+        output_text_description_file: code-coverage-results.md
+
