@@ -15,7 +15,7 @@ jobs:
         app_id: 170284
         private_key: ${{ secrets.PRIVATE_KEY }}
 
-    - uses: LouisBrunner/checks-action@v1.3.1
+    - uses: LouisBrunner/checks-action@v1.6.2
       if: always()
       with:
         token: ${{ steps.get_installation_token.outputs.token }}
